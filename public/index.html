@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Battleship Game</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚢 Interactive Battleship</h1>
+            <p>Answer questions correctly to sink enemy ships!</p>
+        </header>
+
+        <div id="startScreen" class="start-screen">
+            <h2>Welcome to Battleship!</h2>
+            <p>Click on the opponent's board to fire at coordinates. Answer the question correctly to register a hit!</p>
+            <button class="start-btn" onclick="startGame()">Start Game</button>
+            
+            <div class="ships-info">
+                <div class="ship-info">
+                    <div class="ship-color"></div>
+                    <span>Carrier (5)</span>
+                </div>
+                <div class="ship-info">
+                    <div class="ship-color"></div>
+                    <span>Battleship (4)</span>
+                </div>
+                <div class="ship-info">
+                    <div class="ship-color"></div>
+                    <span>Destroyer (3)</span>
+                </div>
+                <div class="ship-info">
+                    <div class="ship-color"></div>
+                    <span>Submarine (3)</span>
+                </div>
+                <div class="ship-info">
+                    <div class="ship-color"></div>
+                    <span>Patrol (2)</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameContainer" style="display: none;">
+            <div class="game-info">
+                <div class="status" id="status">Place your ships and start the game!</div>
+                <div class="turn-info" id="turnInfo">Your Turn</div>
+            </div>
+
+            <div class="boards-container">
+                <div class="board-section">
+                    <h3 class="board-title">My Board</h3>
+                    <div id="myBoard" class="board"></div>
+                </div>
+                
+                <div class="board-section">
+                    <h3 class="board-title">Opponent's Board</h3>
+                    <div id="opponentBoard" class="board"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="questionModal" class="modal">
+            <div class="modal-content">
+                <div class="question" id="questionText"></div>
+                <div class="answers" id="answersContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

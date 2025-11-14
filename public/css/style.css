@@ -1,0 +1,259 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .game-info {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .status {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .boards-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .board-section {
+            text-align: center;
+        }
+
+        .board-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1/1;
+            background-color: #4a5568;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .cell {
+            aspect-ratio: 1/1;
+            background-color: #3182ce;
+            border: 1px solid #2c5282;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            position: relative;
+        }
+
+        .cell:hover {
+            background-color: #4299e1;
+            transform: scale(1.05);
+        }
+
+        .cell.ship {
+            background-color: #2d3748;
+        }
+
+        .cell.hit {
+            background-color: #e53e3e;
+        }
+
+        .cell.miss {
+            background-color: #81c784;
+        }
+
+        .cell.hit::after {
+            content: '✗';
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .cell.miss::after {
+            content: '○';
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2c5282, #1a202c);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .question {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            line-height: .5;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .answer-btn {
+            padding: 12px 20px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 8px;
+            background-color: #4a5568;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .answer-btn:hover {
+            background-color: #718096;
+            transform: translateY(-2px);
+        }
+
+        .answer-btn.correct {
+            background-color: #48bb78;
+        }
+
+        .answer-btn.incorrect {
+            background-color: #f56565;
+        }
+
+        .start-screen {
+            text-align: center;
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .start-btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .ships-info {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .ship-info {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .ship-color {
+            width: 20px;
+            height: 20px;
+            background-color: #2d3748;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .boards-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .board {
+                max-width: 350px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .board-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .board {
+                max-width: 280px;
+            }
+            
+            .cell {
+                font-size: 0.6rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
