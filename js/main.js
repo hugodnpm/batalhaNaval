@@ -216,13 +216,55 @@
 
                     if (gameState.userLives <= 0) {
                         gameState.gameOver = true;
-                        document.getElementById('status').textContent = 'Fim de Jogo! Você não tem mais vidas.';
+                        showGameOverModal();
                     }
                 }
 
                 renderBoard();
                 
             }, 1500);
+        }
+
+        function showGameOverModal() {
+            const gameOverModal = document.getElementById('gameOverModal');
+            gameOverModal.style.display = 'flex';
+
+            document.getElementById('tryAgainBtn').onclick = tryAgain;
+            document.getElementById('newGameBtn').onclick = newGame;
+        }
+
+        function tryAgain() {
+            const gameOverModal = document.getElementById('gameOverModal');
+            gameOverModal.style.display = 'none';
+            
+            // Reset game state but keep player name
+            gameState.opponentBoard = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(0));
+            gameState.opponentShips = [];
+            gameState.gameOver = false;
+            gameState.usedQuestions = [];
+            gameState.userLives = 3;
+            gameState.userScore = 0;
+            gameState.cpuScore = 0;
+
+            document.getElementById('userLives').textContent = gameState.userLives;
+            document.getElementById('userScore').textContent = gameState.userScore;
+            document.getElementById('cpuScore').textContent = gameState.cpuScore;
+
+            restartGame(); // This will re-place ships and render the board
+        }
+
+        function newGame() {
+            const gameOverModal = document.getElementById('gameOverModal');
+            gameOverModal.style.display = 'none';
+
+            // Reset everything, including player name
+            gameState.playerName = '';
+            document.getElementById('playerName').value = ''; // Clear the input field
+            
+            document.getElementById('gameContainer').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'flex'; // Show start screen
+            
+            initializeBoard(); // Reset board and scores
         }
 
         function showSunkMessage(shipName) {

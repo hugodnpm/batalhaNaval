@@ -244,6 +244,9 @@
             border-radius: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; /* Adicionado para garantir que os itens flex se comportem corretamente */
+            flex-direction: column; /* Garante que os itens se empilhem verticalmente */
+            align-items: center; /* Centraliza os itens horizontalmente */
         }
 
         .tutorial {
@@ -328,12 +331,71 @@
             font-size: 1.1rem;
         }
 
+        .game-over-title {
+            font-size: 2.5rem;
+            color: #ef4444;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .game-over-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .game-over-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        #tryAgainBtn {
+            background-color: #4f46e5;
+        }
+
+        #tryAgainBtn:hover {
+            background-color: #3e38b2;
+            transform: translateY(-3px);
+        }
+
+        #newGameBtn {
+            background-color: #22c55e;
+        }
+
+        #newGameBtn:hover {
+            background-color: #1a9f4b;
+            transform: translateY(-3px);
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
             }
             .board {
                 max-width: 90vw;
+            }
+            .game-over-title {
+                font-size: 2rem;
+            }
+            .game-over-message {
+                font-size: 1rem;
+            }
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
             }
         }
 
@@ -348,4 +410,8 @@
                 flex-direction: column;
                 gap: 10px;
             }
+            .game-over-buttons {
+                flex-direction: column;
+            }
         }
+
