@@ -229,13 +229,15 @@
             const gameOverModal = document.getElementById('gameOverModal');
             gameOverModal.style.display = 'flex';
 
-            document.getElementById('tryAgainBtn').onclick = tryAgain;
-            document.getElementById('newGameBtn').onclick = newGame;
+            document.getElementById('tryAgainBtn').onclick = playAgainSamePlayer;
+            document.getElementById('newGameBtn').onclick = newGameNewPlayer;
         }
 
-        function tryAgain() {
+        function playAgainSamePlayer() {
             const gameOverModal = document.getElementById('gameOverModal');
-            gameOverModal.style.display = 'none';
+            const winModal = document.getElementById('winModal');
+            if (gameOverModal) gameOverModal.style.display = 'none';
+            if (winModal) winModal.style.display = 'none';
             
             // Reset game state but keep player name
             gameState.opponentBoard = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(0));
@@ -253,9 +255,11 @@
             restartGame(); // This will re-place ships and render the board
         }
 
-        function newGame() {
+        function newGameNewPlayer() {
             const gameOverModal = document.getElementById('gameOverModal');
-            gameOverModal.style.display = 'none';
+            const winModal = document.getElementById('winModal');
+            if (gameOverModal) gameOverModal.style.display = 'none';
+            if (winModal) winModal.style.display = 'none';
 
             // Reset everything, including player name
             gameState.playerName = '';
@@ -302,9 +306,26 @@
                         if (allSunk) {
                             gameState.gameOver = true;
                             document.getElementById('status').textContent = 'Você Venceu! 🎉';
+                            showWinModal(); // Call the new win modal
                         }
                     }
                     break;
                 }
             }
+        }
+
+        function showWinModal() {
+            const winModal = document.getElementById('winModal');
+            winModal.style.display = 'flex';
+
+            document.getElementById('playAgainSamePlayerBtn').onclick = playAgainSamePlayer;
+            document.getElementById('newGameNewPlayerBtn').onclick = newGameNewPlayer;
+        }
+
+        function goToStartScreen() {
+            document.getElementById('gameContainer').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'flex';
+            gameState.playerName = '';
+            document.getElementById('playerName').value = '';
+            initializeBoard(); // Reset board and scores
         }

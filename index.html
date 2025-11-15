@@ -21,7 +21,7 @@
         </p>
       </header>
 
-      <div id="startScreen" class="start-screen" style="display: flex;">
+      <div id="startScreen" class="start-screen" style="display: flex">
         <h2>Bem-vindo à Batalha dos Angulos!</h2>
         <div class="tutorial">
           <h3>Como Jogar:</h3>
@@ -68,6 +68,9 @@
           <button class="restart-btn" onclick="restartGame()">
             Reiniciar Jogo
           </button>
+          <button class="start-screen-btn" onclick="goToStartScreen()">
+            Ir para o Início
+          </button>
         </div>
 
         <div class="boards-container">
@@ -88,10 +91,31 @@
       <div id="gameOverModal" class="modal">
         <div class="modal-content">
           <h2 class="game-over-title">Fim de Jogo!</h2>
-          <p class="game-over-message">Você perdeu todas as suas vidas. Tente novamente para provar seu valor!</p>
+          <p class="game-over-message">
+            Você perdeu todas as suas vidas. Tente novamente para provar seu
+            valor!
+          </p>
           <div class="game-over-buttons">
             <button class="btn" id="tryAgainBtn">Tentar Novamente</button>
             <button class="btn" id="newGameBtn">Novo Jogo</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="winModal" class="modal">
+        <div class="modal-content">
+          <h2 class="win-title">Parabéns! Você Venceu!</h2>
+          <p class="win-message">
+            Você afundou todos os navios inimigos e provou ser um verdadeiro
+            Mestre dos Ângulos!
+          </p>
+          <div class="win-buttons">
+            <button class="btn" id="playAgainSamePlayerBtn">
+              Jogar Novamente (Mesmo Jogador)
+            </button>
+            <button class="btn" id="newGameNewPlayerBtn">
+              Novo Jogo (Novo Usuário)
+            </button>
           </div>
         </div>
       </div>

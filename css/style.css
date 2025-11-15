@@ -413,5 +413,67 @@
             .game-over-buttons {
                 flex-direction: column;
             }
+            .win-buttons {
+                flex-direction: column;
+            }
         }
+
+        /* Win Modal Styles */
+        .win-title {
+            font-size: 2.5rem;
+            color: #22c55e; /* Green for success */
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .win-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .win-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        #playAgainSamePlayerBtn {
+            background-color: #4f46e5; /* Blue for play again */
+        }
+
+        #playAgainSamePlayerBtn:hover {
+            background-color: #3e38b2;
+            transform: translateY(-3px);
+        }
+
+        #newGameNewPlayerBtn {
+            background-color: #ec4899; /* Pink for new game */
+        }
+
+        #newGameNewPlayerBtn:hover {
+            background-color: #d63a8a;
+            transform: translateY(-3px);
+        }
+
+        /* Go to Start Screen Button Style */
+        .start-screen-btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-left: 10px; /* Add some space from restart button */
+            transition: all 0.3s ease;
+        }
+
+        .start-screen-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
 
