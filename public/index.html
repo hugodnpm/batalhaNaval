@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Batalha Naval Interativa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,36 +18,47 @@
 
         <div id="startScreen" class="start-screen">
             <h2>Bem-vindo à Batalha Naval!</h2>
-            <p>Clique no tabuleiro do oponente para atirar nas coordenadas. Responda a pergunta corretamente para registrar um acerto!</p>
+            <div class="tutorial">
+                <h3>Como Jogar:</h3>
+                <ul>
+                    <li>Clique em um quadrado no tabuleiro para atacar.</li>
+                    <li>Se você acertar um navio, uma pergunta aparecerá.</li>
+                    <li>Responda corretamente para destruir parte do navio.</li>
+                    <li>Se errar a pergunta, você perde uma vida!</li>
+                </ul>
+            </div>
+            <input type="text" id="playerName" placeholder="Digite seu nome">
             <button class="start-btn" onclick="startGame()">Começar Jogo</button>
             
             <div class="ships-info">
                 <div class="ship-info">
-                    <div class="ship-color"></div>
-                    <span>Porta-aviões (5)</span>
+                    <span>🚢 Navio de Guerra (3)</span>
                 </div>
                 <div class="ship-info">
-                    <div class="ship-color"></div>
-                    <span>Navio de Guerra (4)</span>
+                    <span>🚢 Destruidor (2)</span>
                 </div>
                 <div class="ship-info">
-                    <div class="ship-color"></div>
-                    <span>Destruidor (3)</span>
-                </div>
-                <div class="ship-info">
-                    <div class="ship-color"></div>
-                    <span>Submarino (3)</span>
-                </div>
-                <div class="ship-info">
-                    <div class="ship-color"></div>
-                    <span>Patrulha (2)</span>
+                    <span>🚢 Submarino (1)</span>
                 </div>
             </div>
         </div>
 
         <div id="gameContainer" style="display: none;">
+            <div id="sunkMessage" class="sunk-message" style="display: none;"></div>
             <div class="game-info">
-                <div class="status" id="status">Posicione seus navios e comece o jogo!</div>
+                <div class="status" id="status"></div>
+                <div class="score-info">
+                    <div class="score-item">
+                        <span>❤️</span> Vidas: <span id="userLives">3</span>
+                    </div>
+                    <div class="score-item">
+                        <span>🏆</span> <span id="userName"></span>: <span id="userScore">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span>🤖</span> Pontuação CPU: <span id="cpuScore">0</span>
+                    </div>
+                </div>
+                <button class="restart-btn" onclick="restartGame()">Reiniciar Jogo</button>
             </div>
 
             <div class="boards-container">

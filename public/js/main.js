@@ -1,57 +1,82 @@
-
 // Game state management
+        const BOARD_SIZE = 5; // Define o tamanho do tabuleiro para 5x5
+
         const gameState = {
-            opponentBoard: Array(10).fill().map(() => Array(10).fill(0)),
+            opponentBoard: Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(0)),
             opponentShips: [],
             gameOver: false,
             usedQuestions: [],
+            userLives: 3,
+            userScore: 0,
+            cpuScore: 0,
+            playerName: '',
         };
 
         // Ship definitions
         const ships = [
-            { name: "Porta-aviões", size: 5 },
-            { name: "Navio de Guerra", size: 4 },
-            { name: "Destruidor", size: 3 },
-            { name: "Submarino", size: 3 },
-            { name: "Patrulha", size: 2 }
+            { name: "Navio de Guerra", size: 3 },
+            { name: "Destruidor", size: 2 },
+            { name: "Submarino", size: 1 }
         ];
 
-        // Initialize the game
+        // Inicia o jogo (chamado pelo botão "Começar Jogo")
         function startGame() {
+            const playerNameInput = document.getElementById('playerName');
+            gameState.playerName = playerNameInput.value.trim();
+
+            if (gameState.playerName === '') {
+                alert('Por favor, digite seu nome para começar o jogo!');
+                return;
+            }
+
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('gameContainer').style.display = 'block';
             
+            restartGame();
+        }
+
+        // Reinicia o jogo (chamado pelo botão "Reiniciar Jogo" ou após startGame)
+        function restartGame() {
             initializeBoard();
             placeShipsRandomly(gameState.opponentBoard, gameState.opponentShips);
             renderBoard();
             
             document.getElementById('status').textContent = 'Sua vez - Clique no tabuleiro do oponente para atirar!';
+            document.getElementById('userName').textContent = gameState.playerName;
         }
 
-        // Initialize the board
+        // Inicializa o tabuleiro e o estado do jogo
         function initializeBoard() {
-            // Clear existing data
-            gameState.opponentBoard = Array(10).fill().map(() => Array(10).fill(0));
+            // Limpa dados existentes
+            gameState.opponentBoard = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(0));
             gameState.opponentShips = [];
             gameState.gameOver = false;
             gameState.usedQuestions = [];
+            gameState.userLives = 3;
+            gameState.userScore = 0;
+            gameState.cpuScore = 0;
+
+            document.getElementById('userLives').textContent = gameState.userLives;
+            document.getElementById('userScore').textContent = gameState.userScore;
+            document.getElementById('cpuScore').textContent = gameState.cpuScore;
         }
 
-        // Place ships randomly on the board
+        // Posiciona os navios aleatoriamente no tabuleiro
         function placeShipsRandomly(board, shipsArray) {
+            shipsArray.length = 0; // Limpa os navios existentes
             ships.forEach(ship => {
                 let placed = false;
                 while (!placed) {
                     const direction = Math.random() < 0.5 ? 'horizontal' : 'vertical';
-                    const row = Math.floor(Math.random() * 10);
-                    const col = Math.floor(Math.random() * 10);
+                    const row = Math.floor(Math.random() * BOARD_SIZE);
+                    const col = Math.floor(Math.random() * BOARD_SIZE);
 
                     if (canPlaceShip(board, row, col, ship.size, direction)) {
                         const shipPositions = [];
                         for (let i = 0; i < ship.size; i++) {
                             const r = direction === 'horizontal' ? row : row + i;
                             const c = direction === 'horizontal' ? col + i : col;
-                            board[r][c] = 1; // 1 represents a ship
+                            board[r][c] = 1; // 1 representa um navio
                             shipPositions.push([r, c]);
                         }
                         
@@ -68,15 +93,15 @@
             });
         }
 
-        // Check if a ship can be placed at the given position
+        // Verifica se um navio pode ser posicionado na posição dada
         function canPlaceShip(board, row, col, size, direction) {
             if (direction === 'horizontal') {
-                if (col + size > 10) return false;
+                if (col + size > BOARD_SIZE) return false;
                 for (let i = 0; i < size; i++) {
                     if (board[row][col + i] !== 0) return false;
                 }
             } else {
-                if (row + size > 10) return false;
+                if (row + size > BOARD_SIZE) return false;
                 for (let i = 0; i < size; i++) {
                     if (board[row + i][col] !== 0) return false;
                 }
@@ -84,22 +109,24 @@
             return true;
         }
 
-        // Render the board
+        // Renderiza o tabuleiro
         function renderBoard() {
             const boardElement = document.getElementById('opponentBoard');
             boardElement.innerHTML = '';
 
-            for (let row = 0; row < 10; row++) {
-                for (let col = 0; col < 10; col++) {
+            for (let row = 0; row < BOARD_SIZE; row++) {
+                for (let col = 0; col < BOARD_SIZE; col++) {
                     const cell = document.createElement('div');
                     cell.className = 'cell';
                     cell.dataset.row = row;
                     cell.dataset.col = col;
 
-                    if (gameState.opponentBoard[row][col] === 2) { // Hit
+                    if (gameState.opponentBoard[row][col] === 2) { // Acertou
                         cell.classList.add('hit');
-                    } else if (gameState.opponentBoard[row][col] === 3) { // Miss
+                    } else if (gameState.opponentBoard[row][col] === 3) { // Errou
                         cell.classList.add('miss');
+                    } else if (gameState.opponentBoard[row][col] === 4) { // Navio Afundado
+                        cell.classList.add('sunk');
                     } else {
                         cell.addEventListener('click', () => handleCellClick(row, col));
                     }
@@ -109,12 +136,12 @@
             }
         }
 
-        // Handle cell click on opponent's board
+        // Lida com o clique na célula do tabuleiro do oponente
         function handleCellClick(row, col) {
             if (gameState.gameOver) return;
-            if (gameState.opponentBoard[row][col] === 2 || gameState.opponentBoard[row][col] === 3) return;
+            if (gameState.opponentBoard[row][col] === 2 || gameState.opponentBoard[row][col] === 3 || gameState.opponentBoard[row][col] === 4) return;
 
-            if (gameState.opponentBoard[row][col] === 1) { // It's a ship
+            if (gameState.opponentBoard[row][col] === 1) { // É um navio
                 let availableQuestions = questionData.filter((_, index) => !gameState.usedQuestions.includes(index));
 
                 if (availableQuestions.length === 0) {
@@ -129,14 +156,14 @@
                 gameState.usedQuestions.push(originalIndex);
                 
                 showQuestionModal(randomQuestion, row, col);
-            } else { // It's a miss
-                gameState.opponentBoard[row][col] = 3; // 3 represents a miss
+            } else { // É água (erro)
+                gameState.opponentBoard[row][col] = 3; // 3 representa um erro
                 document.getElementById('status').textContent = 'Errou! Tente novamente.';
                 renderBoard();
             }
         }
 
-        // Show question modal
+        // Mostra o modal da pergunta
         function showQuestionModal(question, row, col) {
             const modal = document.getElementById('questionModal');
             const questionText = document.getElementById('questionText');
@@ -156,7 +183,7 @@
             modal.style.display = 'flex';
         }
 
-        // Check if the answer is correct
+        // Verifica se a resposta está correta
         function checkAnswer(answer, selectedIndex, correctIndex, row, col, modal) {
             const buttons = document.querySelectorAll('#answersContainer .answer-btn');
             
@@ -173,14 +200,24 @@
                 modal.style.display = 'none';
                 
                 if (selectedIndex === correctIndex) {
-                    // Correct answer - it's a hit
-                    gameState.opponentBoard[row][col] = 2; // 2 represents a hit
+                    // Resposta correta - é um acerto
+                    gameState.userScore++;
+                    document.getElementById('userScore').textContent = gameState.userScore;
+                    gameState.opponentBoard[row][col] = 2; // 2 representa um acerto
                     checkShipSunk(gameState.opponentShips, row, col);
                     document.getElementById('status').textContent = 'Acertou! Ótimo tiro!';
                 } else {
-                    // Wrong answer - it's a miss
-                    gameState.opponentBoard[row][col] = 3; // 3 represents a miss
-                    document.getElementById('status').textContent = 'Errou! Tente novamente na próxima vez.';
+                    // Resposta errada
+                    gameState.userLives--;
+                    gameState.cpuScore++;
+                    document.getElementById('userLives').textContent = gameState.userLives;
+                    document.getElementById('cpuScore').textContent = gameState.cpuScore;
+                    document.getElementById('status').textContent = 'Errou a pergunta! Menos uma vida.';
+
+                    if (gameState.userLives <= 0) {
+                        gameState.gameOver = true;
+                        document.getElementById('status').textContent = 'Fim de Jogo! Você não tem mais vidas.';
+                    }
                 }
 
                 renderBoard();
@@ -188,7 +225,16 @@
             }, 1500);
         }
 
-        // Check if a ship has been sunk
+        function showSunkMessage(shipName) {
+            const messageElement = document.getElementById('sunkMessage');
+            messageElement.textContent = `Você afundou o ${shipName}!`;
+            messageElement.style.display = 'block';
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 3000);
+        }
+
+        // Verifica se um navio foi afundado
         function checkShipSunk(shipsArray, row, col) {
             for (let ship of shipsArray) {
                 const posIndex = ship.positions.findIndex(pos => pos[0] === row && pos[1] === col);
@@ -196,14 +242,24 @@
                     ship.hits++;
                     
                     if (ship.hits === ship.size) {
-                        document.getElementById('status').textContent = `Você afundou o ${ship.name}!`;
+                        gameState.userScore += 5; // Pontos extras por afundar um navio
+                        document.getElementById('userScore').textContent = gameState.userScore;
                         
-                        // Check if all ships are sunk
+                        ship.positions.forEach(pos => {
+                            const cell = document.querySelector(`.cell[data-row='${pos[0]}'][data-col='${pos[1]}']`);
+                            if (cell) {
+                                cell.classList.add('sunk');
+                                gameState.opponentBoard[pos[0]][pos[1]] = 4; // 4 representa um navio afundado
+                            }
+                        });
+
+                        showSunkMessage(ship.name);
+                        
+                        // Verifica se todos os navios foram afundados
                         const allSunk = shipsArray.every(s => s.hits === s.size);
                         if (allSunk) {
                             gameState.gameOver = true;
                             document.getElementById('status').textContent = 'Você Venceu! 🎉';
-                            document.getElementById('turnInfo').textContent = 'Fim de Jogo';
                         }
                     }
                     break;
