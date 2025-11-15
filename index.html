@@ -1,83 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Batalha Naval Interativa</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
     <div class="container">
-        <header>
-            <h1>🚢 Batalha Naval Interativa</h1>
-            <p>Responda as perguntas corretamente para afundar os navios inimigos!</p>
-        </header>
+      <header>
+        <h1>Batalha Dos Ângulos</h1>
+        <p>
+          Responda as perguntas corretamente para afundar os navios inimigos!
+        </p>
+      </header>
 
-        <div id="startScreen" class="start-screen">
-            <h2>Bem-vindo à Batalha Naval!</h2>
-            <div class="tutorial">
-                <h3>Como Jogar:</h3>
-                <ul>
-                    <li>Clique em um quadrado no tabuleiro para atacar.</li>
-                    <li>Se você acertar um navio, uma pergunta aparecerá.</li>
-                    <li>Responda corretamente para destruir parte do navio.</li>
-                    <li>Se errar a pergunta, você perde uma vida!</li>
-                </ul>
+      <div id="startScreen" class="start-screen">
+        <h2>Bem-vindo à Batalha Naval!</h2>
+        <div class="tutorial">
+          <h3>Como Jogar:</h3>
+          <ul>
+            <li>Clique em um quadrado no tabuleiro para atacar.</li>
+            <li>Se você acertar um navio, uma pergunta aparecerá.</li>
+            <li>Responda corretamente para destruir parte do navio.</li>
+            <li>Se errar a pergunta, você perde uma vida!</li>
+          </ul>
+        </div>
+        <input type="text" id="playerName" placeholder="Digite seu nome" />
+        <button class="start-btn" onclick="startGame()">Começar Jogo</button>
+
+        <div class="ships-info">
+          <div class="ship-info">
+            <span>🚢 Navio de Guerra (3)</span>
+          </div>
+          <div class="ship-info">
+            <span>🚢 Destruidor (2)</span>
+          </div>
+          <div class="ship-info">
+            <span>🚢 Submarino (1)</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="gameContainer" style="display: none">
+        <div id="sunkMessage" class="sunk-message" style="display: none"></div>
+        <div class="game-info">
+          <div class="status" id="status"></div>
+          <div class="score-info">
+            <div class="score-item">
+              <span>❤️</span> Vidas: <span id="userLives">3</span>
             </div>
-            <input type="text" id="playerName" placeholder="Digite seu nome">
-            <button class="start-btn" onclick="startGame()">Começar Jogo</button>
-            
-            <div class="ships-info">
-                <div class="ship-info">
-                    <span>🚢 Navio de Guerra (3)</span>
-                </div>
-                <div class="ship-info">
-                    <span>🚢 Destruidor (2)</span>
-                </div>
-                <div class="ship-info">
-                    <span>🚢 Submarino (1)</span>
-                </div>
+            <div class="score-item">
+              <span>🏆</span> <span id="userName"></span>:
+              <span id="userScore">0</span>
             </div>
+            <div class="score-item">
+              <span>🤖</span> Pontuação do Ângulo Mestre:
+              <span id="cpuScore">0</span>
+            </div>
+          </div>
+          <button class="restart-btn" onclick="restartGame()">
+            Reiniciar Jogo
+          </button>
         </div>
 
-        <div id="gameContainer" style="display: none;">
-            <div id="sunkMessage" class="sunk-message" style="display: none;"></div>
-            <div class="game-info">
-                <div class="status" id="status"></div>
-                <div class="score-info">
-                    <div class="score-item">
-                        <span>❤️</span> Vidas: <span id="userLives">3</span>
-                    </div>
-                    <div class="score-item">
-                        <span>🏆</span> <span id="userName"></span>: <span id="userScore">0</span>
-                    </div>
-                    <div class="score-item">
-                        <span>🤖</span> Pontuação CPU: <span id="cpuScore">0</span>
-                    </div>
-                </div>
-                <button class="restart-btn" onclick="restartGame()">Reiniciar Jogo</button>
-            </div>
-
-            <div class="boards-container">
-                <div class="board-section">
-                    <h3 class="board-title">Tabuleiro do Oponente</h3>
-                    <div id="opponentBoard" class="board"></div>
-                </div>
-            </div>
+        <div class="boards-container">
+          <div class="board-section">
+            <h3 class="board-title">Tabuleiro do Oponente</h3>
+            <div id="opponentBoard" class="board"></div>
+          </div>
         </div>
+      </div>
 
-        <div id="questionModal" class="modal">
-            <div class="modal-content">
-                <div class="question" id="questionText"></div>
-                <div class="answers" id="answersContainer"></div>
-            </div>
+      <div id="questionModal" class="modal">
+        <div class="modal-content">
+          <div class="question" id="questionText"></div>
+          <div class="answers" id="answersContainer"></div>
         </div>
+      </div>
     </div>
 
     <script src="js/questions.js"></script>
     <script src="js/main.js"></script>
-</body>
+  </body>
 </html>
