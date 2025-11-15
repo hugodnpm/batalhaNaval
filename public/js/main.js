@@ -1,72 +1,19 @@
+
 // Game state management
         const gameState = {
-            myBoard: Array(10).fill().map(() => Array(10).fill(0)),
             opponentBoard: Array(10).fill().map(() => Array(10).fill(0)),
-            myShips: [],
             opponentShips: [],
-            currentTurn: 'player',
             gameOver: false,
-            questionData: [
-                {
-                    question: "What is the capital of France?",
-                    answers: ["London", "Berlin", "Paris", "Madrid"],
-                    correct: 2
-                },
-                {
-                    question: "What is 2 + 2?",
-                    answers: ["3", "4", "5", "6"],
-                    correct: 1
-                },
-                {
-                    question: "Which planet is known as the Red Planet?",
-                    answers: ["Venus", "Mars", "Jupiter", "Saturn"],
-                    correct: 1
-                },
-                {
-                    question: "What is the largest ocean on Earth?",
-                    answers: ["Atlantic", "Indian", "Arctic", "Pacific"],
-                    correct: 3
-                },
-                {
-                    question: "Who wrote 'Romeo and Juliet'?",
-                    answers: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
-                    correct: 1
-                },
-                {
-                    question: "What is the chemical symbol for water?",
-                    answers: ["H2O", "CO2", "NaCl", "O2"],
-                    correct: 0
-                },
-                {
-                    question: "How many continents are there?",
-                    answers: ["5", "6", "7", "8"],
-                    correct: 2
-                },
-                {
-                    question: "What is the square root of 16?",
-                    answers: ["2", "4", "8", "16"],
-                    correct: 1
-                },
-                {
-                    question: "Which gas do plants absorb from the atmosphere?",
-                    answers: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
-                    correct: 2
-                },
-                {
-                    question: "What is the smallest prime number?",
-                    answers: ["0", "1", "2", "3"],
-                    correct: 2
-                }
-            ]
+            usedQuestions: [],
         };
 
         // Ship definitions
         const ships = [
-            { name: "Carrier", size: 5 },
-            { name: "Battleship", size: 4 },
-            { name: "Destroyer", size: 3 },
-            { name: "Submarine", size: 3 },
-            { name: "Patrol", size: 2 }
+            { name: "Porta-aviões", size: 5 },
+            { name: "Navio de Guerra", size: 4 },
+            { name: "Destruidor", size: 3 },
+            { name: "Submarino", size: 3 },
+            { name: "Patrulha", size: 2 }
         ];
 
         // Initialize the game
@@ -74,25 +21,20 @@
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('gameContainer').style.display = 'block';
             
-            initializeBoards();
+            initializeBoard();
             placeShipsRandomly(gameState.opponentBoard, gameState.opponentShips);
-            renderBoards();
+            renderBoard();
             
-            document.getElementById('status').textContent = 'Your Turn - Click on opponent\'s board to fire!';
+            document.getElementById('status').textContent = 'Sua vez - Clique no tabuleiro do oponente para atirar!';
         }
 
-        // Initialize both boards
-        function initializeBoards() {
+        // Initialize the board
+        function initializeBoard() {
             // Clear existing data
-            gameState.myBoard = Array(10).fill().map(() => Array(10).fill(0));
             gameState.opponentBoard = Array(10).fill().map(() => Array(10).fill(0));
-            gameState.myShips = [];
             gameState.opponentShips = [];
-            gameState.currentTurn = 'player';
             gameState.gameOver = false;
-
-            // Place player ships randomly
-            placeShipsRandomly(gameState.myBoard, gameState.myShips);
+            gameState.usedQuestions = [];
         }
 
         // Place ships randomly on the board
@@ -142,15 +84,9 @@
             return true;
         }
 
-        // Render both boards
-        function renderBoards() {
-            renderBoard('myBoard', gameState.myBoard, true);
-            renderBoard('opponentBoard', gameState.opponentBoard, false);
-        }
-
-        // Render a specific board
-        function renderBoard(boardId, board, isMyBoard) {
-            const boardElement = document.getElementById(boardId);
+        // Render the board
+        function renderBoard() {
+            const boardElement = document.getElementById('opponentBoard');
             boardElement.innerHTML = '';
 
             for (let row = 0; row < 10; row++) {
@@ -160,18 +96,12 @@
                     cell.dataset.row = row;
                     cell.dataset.col = col;
 
-                    if (isMyBoard) {
-                        if (board[row][col] === 1) {
-                            cell.classList.add('ship');
-                        }
+                    if (gameState.opponentBoard[row][col] === 2) { // Hit
+                        cell.classList.add('hit');
+                    } else if (gameState.opponentBoard[row][col] === 3) { // Miss
+                        cell.classList.add('miss');
                     } else {
-                        if (board[row][col] === 2) { // Hit
-                            cell.classList.add('hit');
-                        } else if (board[row][col] === 3) { // Miss
-                            cell.classList.add('miss');
-                        } else {
-                            cell.addEventListener('click', () => handleCellClick(row, col));
-                        }
+                        cell.addEventListener('click', () => handleCellClick(row, col));
                     }
 
                     boardElement.appendChild(cell);
@@ -181,13 +111,29 @@
 
         // Handle cell click on opponent's board
         function handleCellClick(row, col) {
-            if (gameState.currentTurn !== 'player' || gameState.gameOver) return;
-            if (gameState.opponentBoard[row][col] !== 0 && gameState.opponentBoard[row][col] !== 1) return;
+            if (gameState.gameOver) return;
+            if (gameState.opponentBoard[row][col] === 2 || gameState.opponentBoard[row][col] === 3) return;
 
-            // Get a random question for this cell
-            const randomQuestion = gameState.questionData[Math.floor(Math.random() * gameState.questionData.length)];
-            
-            showQuestionModal(randomQuestion, row, col);
+            if (gameState.opponentBoard[row][col] === 1) { // It's a ship
+                let availableQuestions = questionData.filter((_, index) => !gameState.usedQuestions.includes(index));
+
+                if (availableQuestions.length === 0) {
+                    gameState.usedQuestions = [];
+                    availableQuestions = questionData;
+                }
+
+                const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+                const randomQuestion = availableQuestions[randomIndex];
+                const originalIndex = questionData.indexOf(randomQuestion);
+
+                gameState.usedQuestions.push(originalIndex);
+                
+                showQuestionModal(randomQuestion, row, col);
+            } else { // It's a miss
+                gameState.opponentBoard[row][col] = 3; // 3 represents a miss
+                document.getElementById('status').textContent = 'Errou! Tente novamente.';
+                renderBoard();
+            }
         }
 
         // Show question modal
@@ -229,80 +175,38 @@
                 if (selectedIndex === correctIndex) {
                     // Correct answer - it's a hit
                     gameState.opponentBoard[row][col] = 2; // 2 represents a hit
-                    checkShipSunk(gameState.opponentShips, row, col, 'opponent');
-                    document.getElementById('status').textContent = 'Hit! Great shot!';
+                    checkShipSunk(gameState.opponentShips, row, col);
+                    document.getElementById('status').textContent = 'Acertou! Ótimo tiro!';
                 } else {
                     // Wrong answer - it's a miss
                     gameState.opponentBoard[row][col] = 3; // 3 represents a miss
-                    document.getElementById('status').textContent = 'Miss! Try again next turn.';
+                    document.getElementById('status').textContent = 'Errou! Tente novamente na próxima vez.';
                 }
 
-                renderBoards();
+                renderBoard();
                 
-                if (!gameState.gameOver) {
-                    setTimeout(() => {
-                        gameState.currentTurn = 'opponent';
-                        document.getElementById('turnInfo').textContent = 'Opponent\'s Turn';
-                        document.getElementById('status').textContent = 'Opponent is thinking...';
-                        
-                        setTimeout(opponentTurn, 1500);
-                    }, 1000);
-                }
             }, 1500);
         }
 
         // Check if a ship has been sunk
-        function checkShipSunk(shipsArray, row, col, owner) {
+        function checkShipSunk(shipsArray, row, col) {
             for (let ship of shipsArray) {
                 const posIndex = ship.positions.findIndex(pos => pos[0] === row && pos[1] === col);
                 if (posIndex !== -1) {
                     ship.hits++;
                     
                     if (ship.hits === ship.size) {
-                        document.getElementById('status').textContent = `${owner === 'opponent' ? 'You' : 'Opponent'} sunk the ${ship.name}!`;
+                        document.getElementById('status').textContent = `Você afundou o ${ship.name}!`;
                         
                         // Check if all ships are sunk
                         const allSunk = shipsArray.every(s => s.hits === s.size);
                         if (allSunk) {
                             gameState.gameOver = true;
-                            document.getElementById('status').textContent = owner === 'opponent' ? 'You Win! 🎉' : 'Opponent Wins! 😢';
-                            document.getElementById('turnInfo').textContent = 'Game Over';
+                            document.getElementById('status').textContent = 'Você Venceu! 🎉';
+                            document.getElementById('turnInfo').textContent = 'Fim de Jogo';
                         }
                     }
                     break;
-                }
-            }
-        }
-
-        // Opponent's turn (AI logic)
-        function opponentTurn() {
-            if (gameState.gameOver) return;
-            
-            let validMove = false;
-            while (!validMove) {
-                const row = Math.floor(Math.random() * 10);
-                const col = Math.floor(Math.random() * 10);
-                
-                if (gameState.myBoard[row][col] === 0 || gameState.myBoard[row][col] === 1) {
-                    if (gameState.myBoard[row][col] === 1) {
-                        // Hit
-                        gameState.myBoard[row][col] = 2;
-                        checkShipSunk(gameState.myShips, row, col, 'player');
-                        document.getElementById('status').textContent = 'Opponent hit your ship!';
-                    } else {
-                        // Miss
-                        gameState.myBoard[row][col] = 3;
-                        document.getElementById('status').textContent = 'Opponent missed!';
-                    }
-                    
-                    validMove = true;
-                    renderBoards();
-                    
-                    if (!gameState.gameOver) {
-                        gameState.currentTurn = 'player';
-                        document.getElementById('turnInfo').textContent = 'Your Turn';
-                        document.getElementById('status').textContent = 'Your Turn - Click on opponent\'s board!';
-                    }
                 }
             }
         }

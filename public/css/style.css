@@ -45,13 +45,13 @@
 
         .boards-container {
             display: flex;
-            gap: 30px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .board-section {
             text-align: center;
+            margin: 20px;
         }
 
         .board-title {
@@ -65,7 +65,7 @@
             grid-template-columns: repeat(10, 1fr);
             gap: 2px;
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             aspect-ratio: 1/1;
             background-color: #4a5568;
             padding: 5px;

@@ -1,8 +1,8 @@
 # Project Overview
 
-This project is a single-file, browser-based interactive Battleship game. The user plays against an AI opponent. The core gameplay is a classic Battleship game, with an added twist: to successfully land a hit on the opponent's board, the player must correctly answer a multiple-choice question.
+This project is a browser-based interactive Battleship game. The user plays against an AI opponent. The core gameplay is a classic Battleship game, with an added twist: to successfully land a hit on the opponent's board, the player must correctly answer a multiple-choice question.
 
-The entire application is contained within the `index.html` file, which includes the HTML structure, CSS for styling, and JavaScript for all game logic.
+The application is structured with separate files for HTML, CSS, and JavaScript, located in the `public` directory.
 
 ## Key Features
 
@@ -16,19 +16,23 @@ The entire application is contained within the `index.html` file, which includes
 
 This is a simple HTML/CSS/JavaScript application. No build process is required.
 
-To run the game, simply open the `index.html` file in a web browser.
+To run the game, you can open the `public/index.html` file in a web browser, or start a simple web server in the project's root directory.
 
 ```bash
 # On most systems, you can open the file directly
-open index.html
+open public/index.html
 # Or, you can start a simple web server in this directory
 python3 -m http.server
 ```
 
-Then, navigate to `http://localhost:8000` in your web browser.
+Then, navigate to `http://localhost:8000/public/` in your web browser.
 
 # Development Conventions
 
 *   **Code Style:** The code is written in plain JavaScript, HTML, and CSS. The JavaScript code is well-structured, with a central `gameState` object managing the application's state.
-*   **File Structure:** All code is located in the `index.html` file. The `docs` directory contains a `prompt_initial.md` file, which is currently empty.
+*   **File Structure:**
+    *   `public/index.html`: The main HTML file.
+    *   `public/css/style.css`: Contains all the styles for the application.
+    *   `public/js/main.js`: Contains all the game logic.
+    *   The `docs` directory contains a `prompt_initial.md` file, which is currently empty.
 *   **No Dependencies:** The project uses no external libraries or frameworks.
